@@ -1,10 +1,5 @@
 # Getting Started with Latest Django-React redux toolkit
 
-
-### Reference on react-redux
-
-Open [CodeEvolution](https://www.youtube.com/watch?v=0awA5Uw6SJE&list=PLC3y8-rFHvwiaOAuTtVXittwybYIorRB3).
-
 ## Overview Django REST Framework
 Django REST framework (DRF) is a powerful and flexible toolkit for building Web APIs in Django. It provides a set of tools and abstractions to make it easier to build and consume APIs in a Django application. Here are some key features and concepts associated with Django REST framework:
 
