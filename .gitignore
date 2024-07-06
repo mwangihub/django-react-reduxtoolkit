@@ -5,7 +5,7 @@
 db.sqlite3
 react_fork
 react_fork/
-/.vscdoe
+/.vscode
 # REACT
 # dependencies
 node_modules
