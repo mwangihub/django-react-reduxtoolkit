@@ -9,7 +9,7 @@ env = environ.Env(DEBUG=(bool, False))
 BASE_DIR = Path(__file__).resolve().parent.parent
 environ.Env.read_env(os.path.join(BASE_DIR, ".env"))
 
-SECRET_KEY = env("DJANGO_SECRET")
+SECRET_KEY = env("DJANGO_SECRET_KEY")
 
 DEBUG = True
 

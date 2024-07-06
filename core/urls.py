@@ -7,9 +7,10 @@ from django.views.generic.base import RedirectView, TemplateView
 from django.contrib.staticfiles.storage import staticfiles_storage
 
 favicon_view = RedirectView.as_view(url=staticfiles_storage.url("favicons/dev_1.jpg"))
+
 urlpatterns = [
     path(
-        "api/",
+        "api/auth_urls/",
         include(
             "user.api.urls",
         ),
