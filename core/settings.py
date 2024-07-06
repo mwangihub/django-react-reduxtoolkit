@@ -24,7 +24,7 @@ ROOT_URLCONF = "core.urls"
 
 WSGI_APPLICATION = "core.wsgi.application"
 
-CSRF_COOKIE_SAMESITE = "Lax"
+CSRF_COOKIE_SAMESITE = "Strict"
 SESSION_COOKIE_SAMESITE = "Strict"
 # Production CSRF_COOKIE_HTTPONLY = True
 CSRF_COOKIE_HTTPONLY = False
