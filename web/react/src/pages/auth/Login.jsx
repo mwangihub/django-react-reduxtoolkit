@@ -38,11 +38,11 @@ export const LoginComponent = React.memo(function Login() {
 							</div>
 							<div className="mb-3">
 								<label className="form-label">Email address</label>
-								<input type="email" name='email' className="form-control" value="pmwassini@gmail.com" />
+								<input type="email" name='email' className="form-control" />
 							</div>
 							<div className="mb-3">
 								<label className="form-label">Password</label>
-								<input type="text" name='password' className="form-control" value="kasuku67" />
+								<input type="text" name='password' className="form-control" />
 							</div>
 							<button type="submit" disabled={authLoader} className="btn btn-warning btn-sm w-100">Submit</button>
 						</form>

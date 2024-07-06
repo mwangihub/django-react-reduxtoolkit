@@ -28,6 +28,7 @@ jobs:
           --health-retries 5
 
     env:
+      DJANGO_SECRET: FEX6Ppy1tPf9Cnzj4p4WGeKLs1Pt8Qu
       DATABASE_URL: postgres://postgres:postgres@localhost:5432/mydatabase
 
     steps:

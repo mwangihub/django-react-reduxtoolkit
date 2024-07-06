@@ -1,10 +1,20 @@
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
-from user.auth_config import *
+import os
+import environ
 
+from user.auth_config import *
+from user.auth_config import (
+    AUTH_INSTALLED_APPS,
+    CORS_MIDDLEWARE,
+    CONTEXT_PROCESSORS,
+)
+
+env = environ.Env(DEBUG=(bool, False))
 
 BASE_DIR = Path(__file__).resolve().parent.parent
+environ.Env.read_env(os.path.join(BASE_DIR, ".env"))
 
-SECRET_KEY = os.environ.get("SECRET_KEY")
+SECRET_KEY = env("DJANGO_SECRET")
 
 DEBUG = True
 
@@ -14,15 +24,12 @@ ROOT_URLCONF = "core.urls"
 
 WSGI_APPLICATION = "core.wsgi.application"
 
-# Security
-
 CSRF_COOKIE_SAMESITE = "Lax"
 SESSION_COOKIE_SAMESITE = "Strict"
 # Production CSRF_COOKIE_HTTPONLY = True
 CSRF_COOKIE_HTTPONLY = False
 SESSION_COOKIE_HTTPONLY = True
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
-
 
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",
@@ -31,6 +38,34 @@ CSRF_TRUSTED_ORIGINS = [
     "http://localhost:5173",
 ]
 
+DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+LANGUAGE_CODE = "en-us"
+
+TIME_ZONE = "UTC"
+
+USE_I18N = True
+
+USE_TZ = True
+
+STATICFILES_DIRS = [BASE_DIR, "web/static"]
+if DEBUG:
+    STATICFILES_DIRS += [
+        BASE_DIR,
+        "web/react/dist/assets",
+    ]
+STATICFILES_DIRS += AUTH_STATIC
+STATIC_URL = "/static/"
+STATIC_ROOT = BASE_DIR / "static"
+
+MEDIA_URL = "/media/"
+MEDIA_ROOT = BASE_DIR / "media"
+
+EMAIL_BACKEND = "gmailapi_backend.mail.GmailBackend"
+
+GMAIL_API_CLIENT_ID = ""
+GMAIL_API_CLIENT_SECRET = ""
+GMAIL_API_REFRESH_TOKEN = ""
 
 INSTALLED_APPS = [
     "django.contrib.admin",
@@ -110,32 +145,8 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-LANGUAGE_CODE = "en-us"
-TIME_ZONE = "UTC"
-USE_I18N = True
-USE_TZ = True
-
-STATICFILES_DIRS = [BASE_DIR, "web/static"]
-if DEBUG:
-    STATICFILES_DIRS += [
-        BASE_DIR,
-        "web/test/src/vendor",
-        BASE_DIR,
-        "web/react/dist/assets",
-    ]
-STATIC_URL = "/static/"
-MEDIA_URL = "/media/"
-STATIC_ROOT = BASE_DIR / "static"
-
-
-MEDIA_ROOT = BASE_DIR / "media"
 INSTALLED_APPS += AUTH_INSTALLED_APPS
+
 MIDDLEWARE += CORS_MIDDLEWARE
+
 TEMPLATES[0]["OPTIONS"]["context_processors"] += CONTEXT_PROCESSORS
-STATICFILES_DIRS += AUTH_STATIC
-DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
-EMAIL_BACKEND = "gmailapi_backend.mail.GmailBackend"
-GMAIL_API_CLIENT_ID = os.environ.get("GMAIL_CLIENT_ID")
-GMAIL_API_CLIENT_SECRET = os.environ.get("GMAIL_CLIENT_SECRET")
-GMAIL_API_REFRESH_TOKEN = os.environ.get("GMAIL_REFRESH_TOKEN")
-ALLOWED_EMAIL = os.environ.get("ALLOWED_EMAIL").split(",")
