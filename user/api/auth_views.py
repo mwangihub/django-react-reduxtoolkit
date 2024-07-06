@@ -6,7 +6,6 @@ from rest_framework import permissions
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from api_auth.serializers import LoginSerializer as DefaultLoginSerializer
 from importlib import import_module
 
 
@@ -46,9 +45,9 @@ def import_callable(path_or_callable):
 
 
 settings_serializers = getattr(settings, "REST_AUTH_SERIALIZERS", {})
-LoginSerializer = import_callable(
-    settings_serializers.get("LOGIN_SERIALIZER", DefaultLoginSerializer)
-)
+# LoginSerializer = import_callable(
+#     settings_serializers.get("LOGIN_SERIALIZER", DefaultLoginSerializer)
+# )
 
 
 @method_decorator(csrf_exempt, name="dispatch")
@@ -71,7 +70,7 @@ class LoginView(APIView):
     permission_classes = [
         permissions.AllowAny,
     ]
-    serializer_class = LoginSerializer
+    # serializer_class = LoginSerializer
 
     def post(self, request, *args, **kwargs):
         email = request.data["email"]

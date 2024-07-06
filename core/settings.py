@@ -1,13 +1,8 @@
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
+from datetime import timedelta
 import os
+from pathlib import Path
 import environ
-
-from user.auth_config import *
-from user.auth_config import (
-    AUTH_INSTALLED_APPS,
-    CORS_MIDDLEWARE,
-    CONTEXT_PROCESSORS,
-)
 
 env = environ.Env(DEBUG=(bool, False))
 
@@ -21,6 +16,10 @@ DEBUG = True
 ALLOWED_HOSTS = ["*"]
 
 ROOT_URLCONF = "core.urls"
+
+AUTH_USER_MODEL = "user.User"
+
+SITE_ID = 1
 
 WSGI_APPLICATION = "core.wsgi.application"
 
@@ -54,7 +53,7 @@ if DEBUG:
         BASE_DIR,
         "web/react/dist/assets",
     ]
-STATICFILES_DIRS += AUTH_STATIC
+
 STATIC_URL = "/static/"
 STATIC_ROOT = BASE_DIR / "static"
 
@@ -67,20 +66,29 @@ GMAIL_API_CLIENT_ID = ""
 GMAIL_API_CLIENT_SECRET = ""
 GMAIL_API_REFRESH_TOKEN = ""
 
+
+REST_FRAMEWORK = {
+    "DEFAULT_PERMISSION_CLASSES": [
+        "rest_framework.permissions.IsAuthenticated",
+    ],
+    "DEFAULT_AUTHENTICATION_CLASSES": [
+        "rest_framework.authentication.SessionAuthentication",
+    ],
+}
+
+
 INSTALLED_APPS = [
     "django.contrib.admin",
     "django.contrib.auth",
+    "django.contrib.sites",
     "django.contrib.contenttypes",
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "rest_framework",
-    "rest_framework.authtoken",
     "corsheaders",
-    "ckeditor",
     "django_countries",
     "phonenumber_field",
-    "gmailapi_backend",
     "user",
 ]
 
@@ -145,8 +153,31 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-INSTALLED_APPS += AUTH_INSTALLED_APPS
 
-MIDDLEWARE += CORS_MIDDLEWARE
-
-TEMPLATES[0]["OPTIONS"]["context_processors"] += CONTEXT_PROCESSORS
+SIMPLE_JWT = {
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=5),
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=30),
+    "ROTATE_REFRESH_TOKENS": False,
+    # True -> to avoid leaks
+    "BLACKLIST_AFTER_ROTATION": True,
+    "UPDATE_LAST_LOGIN": False,
+    "ALGORITHM": "HS256",
+    "SIGNING_KEY": os.environ.get("SECRET_KEY"),
+    "VERIFYING_KEY": None,
+    "AUDIENCE": None,
+    "ISSUER": None,
+    "JWK_URL": None,
+    "LEEWAY": 0,
+    "AUTH_HEADER_TYPES": ("Bearer",),
+    "AUTH_HEADER_NAME": "HTTP_AUTHORIZATION",
+    "USER_ID_FIELD": "id",
+    "USER_ID_CLAIM": "user_id",
+    "USER_AUTHENTICATION_RULE": "rest_framework_simplejwt.authentication.default_user_authentication_rule",
+    "AUTH_TOKEN_CLASSES": ("rest_framework_simplejwt.tokens.AccessToken",),
+    "TOKEN_TYPE_CLAIM": "token_type",
+    "TOKEN_USER_CLASS": "rest_framework_simplejwt.models.TokenUser",
+    "JTI_CLAIM": "jti",
+    "SLIDING_TOKEN_REFRESH_EXP_CLAIM": "refresh_exp",
+    "SLIDING_TOKEN_LIFETIME": timedelta(minutes=5),
+    "SLIDING_TOKEN_REFRESH_LIFETIME": timedelta(days=1),
+}

@@ -1,6 +1,1 @@
-from django.urls import path, include, re_path
-from . import views
-
-urlpatterns = [
-    path("accounts/", include("allauth.urls")),
-]
+url_patterns = []
